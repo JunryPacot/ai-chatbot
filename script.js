@@ -18,16 +18,30 @@ async function sendMessage() {
     });
     
     const data = await response.json();
-    
     removeTypingMessage();
     
     if (data.reply) {
       addMessage(data.reply, "bot");
     } else {
-      addMessage("No response", "bot");
+      addMessage("Bot didn't respond.", "bot");
     }
   } catch (error) {
     removeTypingMessage();
-    addMessage("Server error.", "bot");
+    addMessage("Server error occurred.", "bot");
   }
+}
+
+function addMessage(text, sender, isTyping = false) {
+  const chatBox = document.getElementById("chat-box");
+  const msg = document.createElement("div");
+  msg.classList.add("message", sender);
+  msg.textContent = text;
+  if (isTyping) msg.setAttribute("id", "typing");
+  chatBox.appendChild(msg);
+  chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function removeTypingMessage() {
+  const typing = document.getElementById("typing");
+  if (typing) typing.remove();
 }
